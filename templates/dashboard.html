@@ -44,36 +44,6 @@
       <div class="number">{{ n_containers }}</div><div class="label">Containers</div>
     </div>
   </div>
-  <div class="summary-bar">
-    <div class="summary-item exposure">
-      <span class="summary-icon">💰</span>
-      <div class="summary-data">
-        <span class="summary-value">R$ {{ "{:,.0f}".format(financial_exposure).replace(",", ".") }}</span>
-        <span class="summary-label">Exposição</span>
-      </div>
-    </div>
-    <div class="summary-item income">
-      <span class="summary-icon">📈</span>
-      <div class="summary-data">
-        <span class="summary-value">R$ {{ "{:,.0f}".format(financial_income).replace(",", ".") }}</span>
-        <span class="summary-label">Receitas pend.</span>
-      </div>
-    </div>
-    <div class="summary-item overdue">
-      <span class="summary-icon">⏰</span>
-      <div class="summary-data">
-        <span class="summary-value">{{ overdue_count }}</span>
-        <span class="summary-label">Vencidos</span>
-      </div>
-    </div>
-    <div class="summary-item total">
-      <span class="summary-icon">📊</span>
-      <div class="summary-data">
-        <span class="summary-value">{{ total_active }}</span>
-        <span class="summary-label">Itens ativos</span>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- ===== TABS ===== -->
