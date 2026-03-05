@@ -15,6 +15,7 @@ from app.auth import (
     get_current_user, require_auth,
 )
 from app.api import router as api_router
+from app.ingest import router as ingest_router
 from app.seed import seed_database
 
 
@@ -45,6 +46,7 @@ templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
 # API routes
 app.include_router(api_router)
+app.include_router(ingest_router)
 
 
 # ─── HELPERS ─────────────────────────────────────────────────────────────
