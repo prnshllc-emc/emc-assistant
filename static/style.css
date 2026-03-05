@@ -45,8 +45,8 @@ body {
 }
 
 /* ─── Logo ────────────────────────────────────────────────── */
-.login-logo { width: 140px; height: auto; margin: 0 auto 20px; display: block; }
-.header-logo { width: 60px; height: auto; flex-shrink: 0; }
+.login-logo { width: 180px; height: auto; margin: 0 auto 20px; display: block; }
+.header-logo { width: 90px; height: auto; flex-shrink: 0; }
 
 /* ─── Header ──────────────────────────────────────────────── */
 .header {
@@ -693,16 +693,84 @@ body {
 
 /* ─── Footer ──────────────────────────────────────────────── */
 .footer {
-  padding: 24px 32px;
-  text-align: center;
+  padding: 40px 32px 32px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-deep);
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.footer-logo { width: 72px; height: auto; }
+
+.footer-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.footer-brand-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+
+.footer-brand-desc {
+  font-size: 12px;
   color: var(--text-muted);
+}
+
+.footer-links {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.footer-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.footer-links a:hover { color: var(--accent); }
+
+.footer-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--border);
+}
+
+.footer-copy {
   font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 20px;
+  text-align: center;
+  padding-top: 16px;
   border-top: 1px solid var(--border);
   letter-spacing: 0.3px;
 }
 
-.footer a { color: var(--accent); text-decoration: none; }
-.footer a:hover { text-decoration: underline; }
+@media (max-width: 768px) {
+  .footer { padding: 28px 16px 24px; }
+  .footer-inner { flex-direction: column; text-align: center; }
+  .footer-brand { flex-direction: column; }
+  .footer-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
+}
 
 /* ═════════════════════════════════════════════════════════════
    RESPONSIVE DESIGN
