@@ -1,6 +1,8 @@
 """FastAPI main application — EMC Executive Assistant."""
 import os
+import re
 from contextlib import asynccontextmanager
+from datetime import datetime
 
 from fastapi import FastAPI, Request, Depends, Form, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
@@ -81,6 +83,60 @@ def categorize_items(items: list[Item]) -> dict:
         "pending": pending,
         "waiting": waiting,
         "info": info,
+    }
+
+
+def parse_amount(amount_str: str) -> float:
+    """Parse amount string like 'R$ 1.234,56' or 'USD 1,234.56' into float."""
+    if not amount_str:
+        return 0.0
+    cleaned = re.sub(r'[A-Za-z$\s]', '', amount_str)
+    # Handle Brazilian format: 1.234,56
+    if ',' in cleaned and '.' in cleaned:
+        if cleaned.rindex(',') > cleaned.rindex('.'):
+            cleaned = cleaned.replace('.', '').replace(',', '.')
+        else:
+            cleaned = cleaned.replace(',', '')
+    elif ',' in cleaned:
+        cleaned = cleaned.replace(',', '.')
+    try:
+        return float(cleaned)
+    except ValueError:
+        return 0.0
+
+
+def compute_financial_metrics(items: list[Item]) -> dict:
+    """Compute financial exposure, income, overdue, and total active."""
+    exposure = 0.0
+    income = 0.0
+    overdue = 0
+    total_active = 0
+    today = datetime.utcnow().date()
+
+    for item in items:
+        if item.is_container_op or item.is_resolved:
+            continue
+        total_active += 1
+        amt = parse_amount(item.amount)
+        if amt > 0:
+            if item.amount_type == "negative":
+                exposure += amt
+            elif item.amount_type == "positive":
+                income += amt
+        # Check overdue
+        if item.deadline:
+            try:
+                dl = datetime.strptime(item.deadline.strip(), "%Y-%m-%d").date()
+                if dl <= today:
+                    overdue += 1
+            except ValueError:
+                pass
+
+    return {
+        "financial_exposure": exposure,
+        "financial_income": income,
+        "overdue_count": overdue,
+        "total_active": total_active,
     }
 
 
@@ -180,6 +236,7 @@ async def dashboard(request: Request, db: Session = Depends(get_db)):
         ~Container.status.in_(["entregue", "liberado"])
     ).order_by(Container.id).all()
     cats = categorize_items(items)
+    metrics = compute_financial_metrics(items)
 
     return templates.TemplateResponse("dashboard.html", {
         "request": request,
@@ -196,6 +253,11 @@ async def dashboard(request: Request, db: Session = Depends(get_db)):
         "n_info": len(cats["info"]),
         "n_total": len(cats["urgent"]) + len(cats["pending"]) + len(cats["waiting"]) + len(cats["info"]),
         "n_containers": len(containers),
+        # Financial metrics
+        "financial_exposure": metrics["financial_exposure"],
+        "financial_income": metrics["financial_income"],
+        "overdue_count": metrics["overdue_count"],
+        "total_active": metrics["total_active"],
         # Helper functions
         "priority_label": priority_label,
         "source_class": source_class,

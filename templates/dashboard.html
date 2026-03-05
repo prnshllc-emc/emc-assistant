@@ -25,10 +25,65 @@
   </div>
 </header>
 
+<!-- ===== DASHBOARD SUMMARY ===== -->
+<div class="dashboard-summary">
+  <div class="stats-bar">
+    <div class="stat-card urgent clickable" onclick="showTab('tab-urgent')">
+      <div class="number">{{ n_urgent }}</div><div class="label">Urgente</div>
+    </div>
+    <div class="stat-card pending clickable" onclick="showTab('tab-pending')">
+      <div class="number">{{ n_pending }}</div><div class="label">Pendente</div>
+    </div>
+    <div class="stat-card waiting clickable" onclick="showTab('tab-waiting')">
+      <div class="number">{{ n_waiting }}</div><div class="label">Aguardando</div>
+    </div>
+    <div class="stat-card info clickable" onclick="showTab('tab-info')">
+      <div class="number">{{ n_info }}</div><div class="label">Informativo</div>
+    </div>
+    <div class="stat-card calendar clickable" onclick="showTab('tab-containers')">
+      <div class="number">{{ n_containers }}</div><div class="label">Containers</div>
+    </div>
+  </div>
+  <div class="summary-bar">
+    <div class="summary-item exposure">
+      <span class="summary-icon">💰</span>
+      <div class="summary-data">
+        <span class="summary-value">R$ {{ "{:,.0f}".format(financial_exposure).replace(",", ".") }}</span>
+        <span class="summary-label">Exposição</span>
+      </div>
+    </div>
+    <div class="summary-item income">
+      <span class="summary-icon">📈</span>
+      <div class="summary-data">
+        <span class="summary-value">R$ {{ "{:,.0f}".format(financial_income).replace(",", ".") }}</span>
+        <span class="summary-label">Receitas pend.</span>
+      </div>
+    </div>
+    <div class="summary-item overdue">
+      <span class="summary-icon">⏰</span>
+      <div class="summary-data">
+        <span class="summary-value">{{ overdue_count }}</span>
+        <span class="summary-label">Vencidos</span>
+      </div>
+    </div>
+    <div class="summary-item total">
+      <span class="summary-icon">📊</span>
+      <div class="summary-data">
+        <span class="summary-value">{{ total_active }}</span>
+        <span class="summary-label">Itens ativos</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TABS ===== -->
 <div class="tabs">
-  <div class="tab active" onclick="showTab('profissional')">Profissional <span class="count">{{ n_total }}</span></div>
-  <div class="tab" onclick="showTab('containers')">Containers <span class="count">{{ n_containers }}</span></div>
-  <div class="tab" onclick="showTab('api-info')">API</div>
+  <div class="tab tab-urgent active" data-tab="tab-urgent" onclick="showTab('tab-urgent')">🚨 Urgente <span class="count">{{ n_urgent }}</span></div>
+  <div class="tab tab-pending" data-tab="tab-pending" onclick="showTab('tab-pending')">⏳ Pendente <span class="count">{{ n_pending }}</span></div>
+  <div class="tab tab-waiting" data-tab="tab-waiting" onclick="showTab('tab-waiting')">🔄 Aguardando <span class="count">{{ n_waiting }}</span></div>
+  <div class="tab tab-info" data-tab="tab-info" onclick="showTab('tab-info')">ℹ️ Informativo <span class="count">{{ n_info }}</span></div>
+  <div class="tab tab-containers" data-tab="tab-containers" onclick="showTab('tab-containers')">🚢 Containers <span class="count">{{ n_containers }}</span></div>
+  <div class="tab tab-gerencial" data-tab="tab-gerencial" onclick="showTab('tab-gerencial')">📋 Gerencial</div>
 </div>
 
 <!-- Modal overlay -->
@@ -36,23 +91,12 @@
   <div id="modal-content"></div>
 </div>
 
-<!-- ===== TAB: PROFISSIONAL EMC ===== -->
-<div id="profissional" class="tab-content active">
-
-<div class="stats-bar">
-  <div class="stat-card urgent"><div class="number">{{ n_urgent }}</div><div class="label">Urgente / Risco</div></div>
-  <div class="stat-card pending"><div class="number">{{ n_pending }}</div><div class="label">Pendente</div></div>
-  <div class="stat-card waiting"><div class="number">{{ n_waiting }}</div><div class="label">Aguardando</div></div>
-  <div class="stat-card info"><div class="number">{{ n_info }}</div><div class="label">Informativo</div></div>
-  <div class="stat-card calendar"><div class="number">{{ n_containers }}</div><div class="label">Containers</div></div>
-</div>
-
-<div class="main">
-
-  <!-- URGENTE -->
+<!-- ===== TAB: URGENTE ===== -->
+<div id="tab-urgent" class="tab-content active">
+<div class="tab-inner">
   <div class="section full-width">
     <div class="section-header">
-      <h2 style="color:var(--red)">&#x1F6A8; Urgente / Risco</h2>
+      <h2 style="color:var(--red)">🚨 Urgente / Risco</h2>
       <div style="display:flex;gap:8px;align-items:center;">
         <span class="count">{{ n_urgent }}</span>
         <button class="add-btn" hx-get="/htmx/items/new" hx-target="#modal-content" hx-swap="innerHTML"
@@ -64,17 +108,25 @@
         {% include "partials/item_card.html" %}
       {% endfor %}
       {% if not urgent %}
-        <div class="empty-state">Nenhum item urgente</div>
+        <div class="empty-state">Nenhum item urgente — tudo sob controle 👍</div>
       {% endif %}
       <div id="new-item-slot"></div>
     </div>
   </div>
+</div>
+</div>
 
-  <!-- PENDENTE -->
+<!-- ===== TAB: PENDENTE ===== -->
+<div id="tab-pending" class="tab-content">
+<div class="tab-inner">
   <div class="section full-width">
     <div class="section-header">
-      <h2 style="color:var(--amber)">&#x23F3; Pendente sua resposta</h2>
-      <span class="count">{{ n_pending }}</span>
+      <h2 style="color:var(--amber)">⏳ Pendente sua resposta</h2>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="count">{{ n_pending }}</span>
+        <button class="add-btn" hx-get="/htmx/items/new" hx-target="#modal-content" hx-swap="innerHTML"
+                onclick="document.getElementById('modal-overlay').classList.add('active')">+ Novo</button>
+      </div>
     </div>
     <div class="section-body">
       {% for item in pending %}
@@ -85,12 +137,20 @@
       {% endif %}
     </div>
   </div>
+</div>
+</div>
 
-  <!-- AGUARDANDO -->
+<!-- ===== TAB: AGUARDANDO ===== -->
+<div id="tab-waiting" class="tab-content">
+<div class="tab-inner">
   <div class="section full-width">
     <div class="section-header">
-      <h2 style="color:var(--blue)">&#x1F504; Aguardando fornecedor</h2>
-      <span class="count">{{ n_waiting }}</span>
+      <h2 style="color:var(--blue)">🔄 Aguardando fornecedor</h2>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="count">{{ n_waiting }}</span>
+        <button class="add-btn" hx-get="/htmx/items/new" hx-target="#modal-content" hx-swap="innerHTML"
+                onclick="document.getElementById('modal-overlay').classList.add('active')">+ Novo</button>
+      </div>
     </div>
     <div class="section-body">
       {% for item in waiting %}
@@ -101,11 +161,15 @@
       {% endif %}
     </div>
   </div>
+</div>
+</div>
 
-  <!-- INFORMATIVO -->
+<!-- ===== TAB: INFORMATIVO ===== -->
+<div id="tab-info" class="tab-content">
+<div class="tab-inner">
   <div class="section full-width">
     <div class="section-header">
-      <h2 style="color:var(--green)">&#x2139;&#xFE0F; Informativo</h2>
+      <h2 style="color:var(--green)">ℹ️ Informativo / Resolvido</h2>
       <span class="count">{{ n_info }}</span>
     </div>
     <div class="section-body">
@@ -117,57 +181,15 @@
       {% endif %}
     </div>
   </div>
-
-  <!-- CONTAINERS TABLE — inside Profissional tab -->
-  <div class="section full-width">
-    <div class="section-header">
-      <h2>&#x1F6A2; Containers Ativos</h2>
-      <span class="count">{{ n_containers }}</span>
-    </div>
-    <table class="container-table">
-      <thead>
-        <tr><th>Op / Booking</th><th>Container</th><th>Navio</th><th>Rota</th><th>ETD</th><th>ETA</th><th>Status</th></tr>
-      </thead>
-      <tbody>
-        {% for c in containers %}
-        <tr>
-          <td><strong>{{ c.operation }}</strong><br><span style="color:var(--text-muted);font-size:11px">{{ c.booking }}</span></td>
-          <td style="font-family:var(--font-mono);font-size:12px;color:var(--accent)">{{ c.container_number }}</td>
-          <td>{{ c.vessel }}</td>
-          <td>{{ c.route }}</td>
-          <td>{{ c.etd }}</td>
-          <td>{{ c.eta }}</td>
-          <td><span class="status-badge {{ c.status }}">{{ c.status_text }}</span></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <div class="container-glossary">
-      <strong>Glossário de Status:</strong>
-      <div class="glossary-tags">
-        <span class="glossary-tag"><span class="glossary-dot booking"></span> Booking</span>
-        <span class="glossary-tag"><span class="glossary-dot depositado"></span> Depositado</span>
-        <span class="glossary-tag"><span class="glossary-dot saida_confirmada"></span> Saída confirmada</span>
-        <span class="glossary-tag"><span class="glossary-dot em_transito"></span> Em trânsito</span>
-        <span class="glossary-tag"><span class="glossary-dot atrasado"></span> Atrasado</span>
-        <span class="glossary-tag"><span class="glossary-dot confirmacao_chegada"></span> Chegada</span>
-        <span class="glossary-tag"><span class="glossary-dot aduana"></span> Aduana</span>
-        <span class="glossary-tag"><span class="glossary-dot liberado"></span> Liberado</span>
-        <span class="glossary-tag"><span class="glossary-dot remocao"></span> Remoção</span>
-        <span class="glossary-tag"><span class="glossary-dot entregue"></span> Entregue</span>
-      </div>
-    </div>
-  </div>
-
 </div>
 </div>
 
-<!-- ===== TAB: CONTAINERS (mirror) ===== -->
-<div id="containers" class="tab-content">
-<div style="padding: 20px 32px;">
+<!-- ===== TAB: CONTAINERS ===== -->
+<div id="tab-containers" class="tab-content">
+<div class="tab-inner">
   <div class="section full-width">
     <div class="section-header">
-      <h2>&#x1F6A2; Containers Ativos EMC</h2>
+      <h2>🚢 Containers Ativos EMC</h2>
       <span class="count">{{ n_containers }}</span>
     </div>
     <table class="container-table">
@@ -207,42 +229,23 @@
 </div>
 </div>
 
-<!-- ===== TAB: API INFO ===== -->
-<div id="api-info" class="tab-content">
-<div style="padding: 20px 32px;">
+<!-- ===== TAB: GERENCIAL ===== -->
+<div id="tab-gerencial" class="tab-content">
+<div class="tab-inner">
   <div class="section full-width">
     <div class="section-header">
-      <h2>&#x1F4E1; API REST</h2>
+      <h2>📋 Gerencial</h2>
     </div>
-    <div style="padding:24px;font-size:13px;color:var(--text-secondary);">
-      <p style="margin-bottom:20px;">Documentação interativa disponível em <a href="/docs" style="color:var(--accent);font-weight:600" target="_blank">/docs</a> (Swagger) e <a href="/redoc" style="color:var(--accent);font-weight:600" target="_blank">/redoc</a> (ReDoc).</p>
-
-      <h4 style="color:var(--text-primary);margin-bottom:10px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;">Auth</h4>
-      <code style="color:#4ade80;background:var(--bg-deep);padding:12px 16px;border-radius:8px;display:block;margin-bottom:20px;font-family:var(--font-mono);font-size:12px;line-height:1.8;border:1px solid var(--border);">
-POST /api/v1/auth/login &nbsp;&rarr;&nbsp; {"email":"...","password":"..."} &rarr; JWT<br>
-GET &nbsp;/api/v1/auth/me &nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; User info (Bearer token)
-      </code>
-
-      <h4 style="color:var(--text-primary);margin-bottom:10px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;">Items (CRUD)</h4>
-      <code style="color:#4ade80;background:var(--bg-deep);padding:12px 16px;border-radius:8px;display:block;margin-bottom:20px;font-family:var(--font-mono);font-size:12px;line-height:1.8;border:1px solid var(--border);">
-GET &nbsp;&nbsp;&nbsp;/api/v1/items &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; List (?urgency=, ?status=)<br>
-GET &nbsp;&nbsp;&nbsp;/api/v1/items/{id} &nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; Detail<br>
-POST &nbsp;&nbsp;/api/v1/items &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; Create<br>
-PUT &nbsp;&nbsp;&nbsp;/api/v1/items/{id} &nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; Update<br>
-DELETE &nbsp;/api/v1/items/{id} &nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; Delete<br>
-POST &nbsp;&nbsp;/api/v1/items/{id}/resolve &rarr; Toggle
-      </code>
-
-      <h4 style="color:var(--text-primary);margin-bottom:10px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;">Containers</h4>
-      <code style="color:#4ade80;background:var(--bg-deep);padding:12px 16px;border-radius:8px;display:block;font-family:var(--font-mono);font-size:12px;line-height:1.8;border:1px solid var(--border);">
-GET &nbsp;&nbsp;/api/v1/containers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; List<br>
-POST &nbsp;/api/v1/containers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; Create<br>
-PUT &nbsp;&nbsp;/api/v1/containers/{id} &rarr;&nbsp; Update
-      </code>
+    <div class="gerencial-placeholder">
+      <div class="placeholder-icon">🚧</div>
+      <h3>Em construção</h3>
+      <p>Esta aba será configurada em breve com indicadores gerenciais, relatórios e métricas estratégicas da EMC.</p>
     </div>
   </div>
 </div>
 </div>
+
+<!-- ===== TAB: API (hidden, accessible via /docs) ===== -->
 
 <footer class="footer">
   <div class="footer-inner">
@@ -259,6 +262,8 @@ PUT &nbsp;&nbsp;/api/v1/containers/{id} &rarr;&nbsp; Update
       <a href="https://calculadora.enviandomeucarro.com" target="_blank">Calculadora</a>
       <span class="footer-divider"></span>
       <a href="https://importacao.enviandomeucarro.com" target="_blank">Importação</a>
+      <span class="footer-divider"></span>
+      <a href="/docs" target="_blank">API Docs</a>
     </div>
   </div>
   <div class="footer-copy">&copy; 2026 EMC &mdash; Todos os direitos reservados</div>
@@ -269,7 +274,8 @@ function showTab(name) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
   document.getElementById(name).classList.add('active');
-  event.target.closest('.tab').classList.add('active');
+  const tabEl = document.querySelector(`.tab[data-tab="${name}"]`);
+  if (tabEl) tabEl.classList.add('active');
 }
 </script>
 
