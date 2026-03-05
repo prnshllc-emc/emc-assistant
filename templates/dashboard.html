@@ -10,18 +10,21 @@
 </head>
 <body>
 
-<div class="header">
-  <div class="header-left">
-    <img src="/static/logo.svg" alt="EMC" class="header-logo">
-    <h1>Assistente Executivo <span class="brand">EMC</span>
-      {% if n_urgent > 0 %}<span class="badge">{{ n_urgent }} URGENTE{{ 'S' if n_urgent > 1 else '' }}</span>{% endif %}
-    </h1>
+<header class="header">
+  <div class="header-accent"></div>
+  <div class="header-main">
+    <div class="header-left">
+      <img src="/static/logo.svg" alt="EMC" class="header-logo">
+      <h1>Assistente Executivo <span class="brand">EMC</span>
+        {% if n_urgent > 0 %}<span class="badge">{{ n_urgent }} URGENTE{{ 'S' if n_urgent > 1 else '' }}</span>{% endif %}
+      </h1>
+    </div>
+    <div class="user-info">
+      <span class="date">{{ user.name }}</span>
+      <a href="/logout">Sair</a>
+    </div>
   </div>
-  <div class="user-info">
-    <span class="date">{{ user.name }}</span>
-    <a href="/logout">Sair</a>
-  </div>
-</div>
+</header>
 
 <div class="tabs">
   <div class="tab active" onclick="showTab('profissional')">Profissional <span class="count">{{ n_total }}</span></div>
