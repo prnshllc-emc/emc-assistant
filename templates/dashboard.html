@@ -11,18 +11,20 @@
 <body>
 
 <div class="header">
-  <div style="display:flex;align-items:center;gap:12px;">
+  <div class="header-left">
     <img src="/static/logo.svg" alt="EMC" class="header-logo">
-    <h1>Assistente Executivo <span>EMC</span> <span class="badge">{{ n_urgent }} URGENTES</span></h1>
+    <h1>Assistente Executivo <span class="brand">EMC</span>
+      {% if n_urgent > 0 %}<span class="badge">{{ n_urgent }} URGENTE{{ 'S' if n_urgent > 1 else '' }}</span>{% endif %}
+    </h1>
   </div>
   <div class="user-info">
-    <span class="date">{{ user.email }}</span>
+    <span class="date">{{ user.name }}</span>
     <a href="/logout">Sair</a>
   </div>
 </div>
 
 <div class="tabs">
-  <div class="tab active" onclick="showTab('profissional')">Profissional EMC <span class="count">{{ n_total }}</span></div>
+  <div class="tab active" onclick="showTab('profissional')">Profissional <span class="count">{{ n_total }}</span></div>
   <div class="tab" onclick="showTab('containers')">Containers <span class="count">{{ n_containers }}</span></div>
   <div class="tab" onclick="showTab('api-info')">API</div>
 </div>
@@ -37,10 +39,10 @@
 
 <div class="stats-bar">
   <div class="stat-card urgent"><div class="number">{{ n_urgent }}</div><div class="label">Urgente / Risco</div></div>
-  <div class="stat-card pending"><div class="number">{{ n_pending }}</div><div class="label">Pendente sua resposta</div></div>
-  <div class="stat-card waiting"><div class="number">{{ n_waiting }}</div><div class="label">Aguardando fornecedor</div></div>
+  <div class="stat-card pending"><div class="number">{{ n_pending }}</div><div class="label">Pendente</div></div>
+  <div class="stat-card waiting"><div class="number">{{ n_waiting }}</div><div class="label">Aguardando</div></div>
   <div class="stat-card info"><div class="number">{{ n_info }}</div><div class="label">Informativo</div></div>
-  <div class="stat-card calendar"><div class="number">{{ n_containers }}</div><div class="label">Containers ativos</div></div>
+  <div class="stat-card calendar"><div class="number">{{ n_containers }}</div><div class="label">Containers</div></div>
 </div>
 
 <div class="main">
@@ -48,7 +50,7 @@
   <!-- URGENTE -->
   <div class="section full-width">
     <div class="section-header">
-      <h2 style="color:#ef4444">&#x1F6A8; Urgente / Risco</h2>
+      <h2 style="color:var(--red)">&#x1F6A8; Urgente / Risco</h2>
       <div style="display:flex;gap:8px;align-items:center;">
         <span class="count">{{ n_urgent }}</span>
         <button class="add-btn" hx-get="/htmx/items/new" hx-target="#modal-content" hx-swap="innerHTML"
@@ -69,7 +71,7 @@
   <!-- PENDENTE -->
   <div class="section full-width">
     <div class="section-header">
-      <h2 style="color:#f59e0b">&#x23F3; Pendente sua resposta</h2>
+      <h2 style="color:var(--amber)">&#x23F3; Pendente sua resposta</h2>
       <span class="count">{{ n_pending }}</span>
     </div>
     <div class="section-body">
@@ -85,7 +87,7 @@
   <!-- AGUARDANDO -->
   <div class="section full-width">
     <div class="section-header">
-      <h2 style="color:#3b82f6">&#x1F504; Aguardando fornecedor</h2>
+      <h2 style="color:var(--blue)">&#x1F504; Aguardando fornecedor</h2>
       <span class="count">{{ n_waiting }}</span>
     </div>
     <div class="section-body">
@@ -101,7 +103,7 @@
   <!-- INFORMATIVO -->
   <div class="section full-width">
     <div class="section-header">
-      <h2 style="color:#22c55e">&#x2139;&#xFE0F; Informativo</h2>
+      <h2 style="color:var(--green)">&#x2139;&#xFE0F; Informativo</h2>
       <span class="count">{{ n_info }}</span>
     </div>
     <div class="section-body">
@@ -117,7 +119,7 @@
   <!-- CONTAINERS TABLE — inside Profissional tab -->
   <div class="section full-width">
     <div class="section-header">
-      <h2>&#x1F6A2; Containers Ativos EMC</h2>
+      <h2>&#x1F6A2; Containers Ativos</h2>
       <span class="count">{{ n_containers }}</span>
     </div>
     <table class="container-table">
@@ -127,8 +129,8 @@
       <tbody>
         {% for c in containers %}
         <tr>
-          <td><strong>{{ c.operation }}</strong><br><span style="color:#64748b;font-size:11px">{{ c.booking }}</span></td>
-          <td style="font-family:monospace;font-size:12px;color:#60a5fa">{{ c.container_number }}</td>
+          <td><strong>{{ c.operation }}</strong><br><span style="color:var(--text-muted);font-size:11px">{{ c.booking }}</span></td>
+          <td style="font-family:var(--font-mono);font-size:12px;color:var(--accent)">{{ c.container_number }}</td>
           <td>{{ c.vessel }}</td>
           <td>{{ c.route }}</td>
           <td>{{ c.etd }}</td>
@@ -141,15 +143,15 @@
     <div class="container-glossary">
       <strong>Glossário de Status:</strong>
       <div class="glossary-tags">
-        <span class="glossary-tag"><span class="glossary-dot booking"></span> Booking — emitido, carga não estufada</span>
-        <span class="glossary-tag"><span class="glossary-dot depositado"></span> Depositado — container pronto p/ viagem</span>
+        <span class="glossary-tag"><span class="glossary-dot booking"></span> Booking</span>
+        <span class="glossary-tag"><span class="glossary-dot depositado"></span> Depositado</span>
         <span class="glossary-tag"><span class="glossary-dot saida_confirmada"></span> Saída confirmada</span>
         <span class="glossary-tag"><span class="glossary-dot em_transito"></span> Em trânsito</span>
-        <span class="glossary-tag"><span class="glossary-dot atrasado"></span> Atrasado — ETD vencida sem chegada</span>
-        <span class="glossary-tag"><span class="glossary-dot confirmacao_chegada"></span> Chegada confirmada</span>
-        <span class="glossary-tag"><span class="glossary-dot aduana"></span> Aduana — liberação RFB/CBP</span>
+        <span class="glossary-tag"><span class="glossary-dot atrasado"></span> Atrasado</span>
+        <span class="glossary-tag"><span class="glossary-dot confirmacao_chegada"></span> Chegada</span>
+        <span class="glossary-tag"><span class="glossary-dot aduana"></span> Aduana</span>
         <span class="glossary-tag"><span class="glossary-dot liberado"></span> Liberado</span>
-        <span class="glossary-tag"><span class="glossary-dot remocao"></span> Remoção — trânsito p/ armazém</span>
+        <span class="glossary-tag"><span class="glossary-dot remocao"></span> Remoção</span>
         <span class="glossary-tag"><span class="glossary-dot entregue"></span> Entregue</span>
       </div>
     </div>
@@ -173,8 +175,8 @@
       <tbody>
         {% for c in containers %}
         <tr>
-          <td><strong>{{ c.operation }}</strong><br><span style="color:#64748b;font-size:11px">{{ c.booking }}</span></td>
-          <td style="font-family:monospace;font-size:12px;color:#60a5fa">{{ c.container_number }}</td>
+          <td><strong>{{ c.operation }}</strong><br><span style="color:var(--text-muted);font-size:11px">{{ c.booking }}</span></td>
+          <td style="font-family:var(--font-mono);font-size:12px;color:var(--accent)">{{ c.container_number }}</td>
           <td>{{ c.vessel }}</td>
           <td>{{ c.route }}</td>
           <td>{{ c.etd }}</td>
@@ -187,15 +189,15 @@
     <div class="container-glossary">
       <strong>Glossário de Status:</strong>
       <div class="glossary-tags">
-        <span class="glossary-tag"><span class="glossary-dot booking"></span> Booking — emitido, carga não estufada</span>
-        <span class="glossary-tag"><span class="glossary-dot depositado"></span> Depositado — container pronto p/ viagem</span>
+        <span class="glossary-tag"><span class="glossary-dot booking"></span> Booking</span>
+        <span class="glossary-tag"><span class="glossary-dot depositado"></span> Depositado</span>
         <span class="glossary-tag"><span class="glossary-dot saida_confirmada"></span> Saída confirmada</span>
         <span class="glossary-tag"><span class="glossary-dot em_transito"></span> Em trânsito</span>
-        <span class="glossary-tag"><span class="glossary-dot atrasado"></span> Atrasado — ETD vencida sem chegada</span>
-        <span class="glossary-tag"><span class="glossary-dot confirmacao_chegada"></span> Chegada confirmada</span>
-        <span class="glossary-tag"><span class="glossary-dot aduana"></span> Aduana — liberação RFB/CBP</span>
+        <span class="glossary-tag"><span class="glossary-dot atrasado"></span> Atrasado</span>
+        <span class="glossary-tag"><span class="glossary-dot confirmacao_chegada"></span> Chegada</span>
+        <span class="glossary-tag"><span class="glossary-dot aduana"></span> Aduana</span>
         <span class="glossary-tag"><span class="glossary-dot liberado"></span> Liberado</span>
-        <span class="glossary-tag"><span class="glossary-dot remocao"></span> Remoção — trânsito p/ armazém</span>
+        <span class="glossary-tag"><span class="glossary-dot remocao"></span> Remoção</span>
         <span class="glossary-tag"><span class="glossary-dot entregue"></span> Entregue</span>
       </div>
     </div>
@@ -210,35 +212,38 @@
     <div class="section-header">
       <h2>&#x1F4E1; API REST</h2>
     </div>
-    <div style="padding:20px;font-size:13px;color:#94a3b8;">
-      <p style="margin-bottom:16px;">API documentation available at <a href="/docs" style="color:#60a5fa" target="_blank">/docs</a> (Swagger UI) and <a href="/redoc" style="color:#60a5fa" target="_blank">/redoc</a> (ReDoc).</p>
+    <div style="padding:24px;font-size:13px;color:var(--text-secondary);">
+      <p style="margin-bottom:20px;">Documentação interativa disponível em <a href="/docs" style="color:var(--accent);font-weight:600" target="_blank">/docs</a> (Swagger) e <a href="/redoc" style="color:var(--accent);font-weight:600" target="_blank">/redoc</a> (ReDoc).</p>
 
-      <h4 style="color:#f8fafc;margin-bottom:8px;">Auth</h4>
-      <code style="color:#4ade80;background:#0f172a;padding:8px 12px;border-radius:6px;display:block;margin-bottom:16px;">
-POST /api/v1/auth/login &nbsp;→&nbsp; {"email":"...","password":"..."} → JWT token<br>
-GET &nbsp;/api/v1/auth/me &nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; User info (requires Bearer token)
+      <h4 style="color:var(--text-primary);margin-bottom:10px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;">Auth</h4>
+      <code style="color:#4ade80;background:var(--bg-deep);padding:12px 16px;border-radius:8px;display:block;margin-bottom:20px;font-family:var(--font-mono);font-size:12px;line-height:1.8;border:1px solid var(--border);">
+POST /api/v1/auth/login &nbsp;&rarr;&nbsp; {"email":"...","password":"..."} &rarr; JWT<br>
+GET &nbsp;/api/v1/auth/me &nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; User info (Bearer token)
       </code>
 
-      <h4 style="color:#f8fafc;margin-bottom:8px;">Items (CRUD)</h4>
-      <code style="color:#4ade80;background:#0f172a;padding:8px 12px;border-radius:6px;display:block;margin-bottom:16px;">
-GET &nbsp;&nbsp;&nbsp;/api/v1/items &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; List (filtros: ?urgency=, ?status=, ?category=)<br>
-GET &nbsp;&nbsp;&nbsp;/api/v1/items/{id} &nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; Detail<br>
-POST &nbsp;&nbsp;/api/v1/items &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; Create<br>
-PUT &nbsp;&nbsp;&nbsp;/api/v1/items/{id} &nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; Update<br>
-DELETE &nbsp;/api/v1/items/{id} &nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; Delete<br>
-POST &nbsp;&nbsp;/api/v1/items/{id}/resolve → Toggle resolved<br>
-GET &nbsp;&nbsp;&nbsp;/api/v1/items/stats &nbsp;&nbsp;&nbsp;→&nbsp; Dashboard stats
+      <h4 style="color:var(--text-primary);margin-bottom:10px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;">Items (CRUD)</h4>
+      <code style="color:#4ade80;background:var(--bg-deep);padding:12px 16px;border-radius:8px;display:block;margin-bottom:20px;font-family:var(--font-mono);font-size:12px;line-height:1.8;border:1px solid var(--border);">
+GET &nbsp;&nbsp;&nbsp;/api/v1/items &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; List (?urgency=, ?status=)<br>
+GET &nbsp;&nbsp;&nbsp;/api/v1/items/{id} &nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; Detail<br>
+POST &nbsp;&nbsp;/api/v1/items &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; Create<br>
+PUT &nbsp;&nbsp;&nbsp;/api/v1/items/{id} &nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; Update<br>
+DELETE &nbsp;/api/v1/items/{id} &nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; Delete<br>
+POST &nbsp;&nbsp;/api/v1/items/{id}/resolve &rarr; Toggle
       </code>
 
-      <h4 style="color:#f8fafc;margin-bottom:8px;">Containers</h4>
-      <code style="color:#4ade80;background:#0f172a;padding:8px 12px;border-radius:6px;display:block;">
-GET &nbsp;&nbsp;/api/v1/containers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; List all<br>
-POST &nbsp;/api/v1/containers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; Create<br>
-PUT &nbsp;&nbsp;/api/v1/containers/{id} →&nbsp; Update
+      <h4 style="color:var(--text-primary);margin-bottom:10px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;">Containers</h4>
+      <code style="color:#4ade80;background:var(--bg-deep);padding:12px 16px;border-radius:8px;display:block;font-family:var(--font-mono);font-size:12px;line-height:1.8;border:1px solid var(--border);">
+GET &nbsp;&nbsp;/api/v1/containers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; List<br>
+POST &nbsp;/api/v1/containers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr;&nbsp; Create<br>
+PUT &nbsp;&nbsp;/api/v1/containers/{id} &rarr;&nbsp; Update
       </code>
     </div>
   </div>
 </div>
+</div>
+
+<div class="footer">
+  Enviando Meu Carro &mdash; Assistente Executivo &bull; <a href="https://enviandomeucarro.com" target="_blank">enviandomeucarro.com</a>
 </div>
 
 <script>
