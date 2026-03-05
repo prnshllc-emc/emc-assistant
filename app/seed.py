@@ -45,11 +45,11 @@ CONTAINERS = [
      "etd": "01/Mar", "eta": "17/Mar",
      "status": "em_transito", "status_text": "Em trânsito marítimo"},
 
-    # ── Importação BMW E30 (Allog / René Genofre) ────────────────────────
-    {"op": "1052-I-ON", "booking": "A definir", "container": "1x FCL 20'",
-     "vessel": "A definir", "route": "Bremerhaven → Santos",
-     "etd": "A definir", "eta": "22-26d trânsito",
-     "status": "booking", "status_text": "⚠️ LI vencida 22/Fev — renovar + nova cotação Allog"},
+    # ── Importação BMW E30 (Allog / Mundi) ────────────────────────────────
+    {"op": "1025-I-ON", "booking": "A definir", "container": "1x FCL 20'",
+     "vessel": "MAERSK LA PAZ 607S", "route": "Bremerhaven → Santos",
+     "etd": "26/Fev", "eta": "21/Mar",
+     "status": "em_transito", "status_text": "Em trânsito — embarcou 26/Fev"},
 
     # ── Retorno Argentina (Allog) ────────────────────────────────────────
     {"op": "1034-A-ON", "booking": "IM0226121586", "container": "IKLZ7776576",
