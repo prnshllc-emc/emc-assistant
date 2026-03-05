@@ -175,7 +175,10 @@ async def dashboard(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url="/login", status_code=303)
 
     items = db.query(Item).order_by(Item.id).all()
-    containers = db.query(Container).order_by(Container.id).all()
+    # Filter out resolved containers (entregue, liberado)
+    containers = db.query(Container).filter(
+        ~Container.status.in_(["entregue", "liberado"])
+    ).order_by(Container.id).all()
     cats = categorize_items(items)
 
     return templates.TemplateResponse("dashboard.html", {

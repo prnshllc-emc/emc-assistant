@@ -46,7 +46,7 @@ body {
 
 /* ─── Logo ────────────────────────────────────────────────── */
 .login-logo { width: 180px; height: auto; margin: 0 auto 20px; display: block; }
-.header-logo { width: 90px; height: auto; flex-shrink: 0; }
+.header-logo { width: 140px; height: auto; flex-shrink: 0; }
 
 /* ─── Header ──────────────────────────────────────────────── */
 .header {
@@ -59,12 +59,6 @@ body {
   top: 0;
   z-index: 100;
   backdrop-filter: blur(20px);
-}
-
-.header-accent {
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent) 0%, #FF5C35 40%, transparent 100%);
-  flex-shrink: 0;
 }
 
 .header-main {
@@ -895,7 +889,7 @@ body {
 @media (max-width: 480px) {
   .stats-bar { grid-template-columns: 1fr 1fr; }
 
-  .header-logo { width: 48px; }
+  .header-logo { width: 80px; }
 
   .item-h {
     flex-wrap: wrap;
