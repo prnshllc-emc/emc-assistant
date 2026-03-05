@@ -118,10 +118,38 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .container-table th { text-align: left; padding: 10px 16px; font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #334155; }
 .container-table td { padding: 10px 16px; font-size: 13px; border-bottom: 1px solid #0f172a; }
 .status-badge { padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+.status-badge.booking { background: #1e1b4b; color: #a5b4fc; }
+.status-badge.depositado { background: #172554; color: #93c5fd; }
+.status-badge.saida_confirmada { background: #0c4a6e; color: #7dd3fc; }
+.status-badge.em_transito { background: #172554; color: #93c5fd; }
+.status-badge.atrasado { background: #450a0a; color: #fca5a5; }
+.status-badge.confirmacao_chegada { background: #052e16; color: #86efac; }
+.status-badge.aduana { background: #451a03; color: #fdba74; }
+.status-badge.liberado { background: #052e16; color: #4ade80; }
+.status-badge.remocao { background: #3b0764; color: #c084fc; }
+.status-badge.entregue { background: #064e3b; color: #34d399; }
+/* Legacy compat */
 .status-badge.transit { background: #172554; color: #93c5fd; }
 .status-badge.arrived { background: #052e16; color: #86efac; }
 .status-badge.alert { background: #450a0a; color: #fca5a5; }
 .status-badge.loading { background: #451a03; color: #fdba74; }
+
+/* Container glossary footer */
+.container-glossary { padding: 16px 20px; border-top: 1px solid #334155; font-size: 11px; color: #64748b; line-height: 1.8; }
+.container-glossary strong { color: #94a3b8; font-weight: 600; }
+.glossary-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.glossary-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; }
+.glossary-dot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+.glossary-dot.booking { background: #a5b4fc; }
+.glossary-dot.depositado { background: #93c5fd; }
+.glossary-dot.saida_confirmada { background: #7dd3fc; }
+.glossary-dot.em_transito { background: #93c5fd; }
+.glossary-dot.atrasado { background: #fca5a5; }
+.glossary-dot.confirmacao_chegada { background: #86efac; }
+.glossary-dot.aduana { background: #fdba74; }
+.glossary-dot.liberado { background: #4ade80; }
+.glossary-dot.remocao { background: #c084fc; }
+.glossary-dot.entregue { background: #34d399; }
 
 /* Personal section */
 .personal-section { border-left: 3px solid #8b5cf6; }

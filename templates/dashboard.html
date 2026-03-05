@@ -122,7 +122,7 @@
     </div>
     <table class="container-table">
       <thead>
-        <tr><th>Operação / Booking</th><th>Container</th><th>Navio</th><th>Rota</th><th>ETD</th><th>ETA</th><th>Status</th></tr>
+        <tr><th>Op / Booking</th><th>Container</th><th>Navio</th><th>Rota</th><th>ETD</th><th>ETA</th><th>Status</th></tr>
       </thead>
       <tbody>
         {% for c in containers %}
@@ -138,6 +138,21 @@
         {% endfor %}
       </tbody>
     </table>
+    <div class="container-glossary">
+      <strong>Glossário de Status:</strong>
+      <div class="glossary-tags">
+        <span class="glossary-tag"><span class="glossary-dot booking"></span> Booking — emitido, carga não estufada</span>
+        <span class="glossary-tag"><span class="glossary-dot depositado"></span> Depositado — container pronto p/ viagem</span>
+        <span class="glossary-tag"><span class="glossary-dot saida_confirmada"></span> Saída confirmada</span>
+        <span class="glossary-tag"><span class="glossary-dot em_transito"></span> Em trânsito</span>
+        <span class="glossary-tag"><span class="glossary-dot atrasado"></span> Atrasado — ETD vencida sem chegada</span>
+        <span class="glossary-tag"><span class="glossary-dot confirmacao_chegada"></span> Chegada confirmada</span>
+        <span class="glossary-tag"><span class="glossary-dot aduana"></span> Aduana — liberação RFB/CBP</span>
+        <span class="glossary-tag"><span class="glossary-dot liberado"></span> Liberado</span>
+        <span class="glossary-tag"><span class="glossary-dot remocao"></span> Remoção — trânsito p/ armazém</span>
+        <span class="glossary-tag"><span class="glossary-dot entregue"></span> Entregue</span>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -153,7 +168,7 @@
     </div>
     <table class="container-table">
       <thead>
-        <tr><th>Operação / Booking</th><th>Container</th><th>Navio</th><th>Rota</th><th>ETD</th><th>ETA</th><th>Status</th></tr>
+        <tr><th>Op / Booking</th><th>Container</th><th>Navio</th><th>Rota</th><th>ETD</th><th>ETA</th><th>Status</th></tr>
       </thead>
       <tbody>
         {% for c in containers %}
@@ -169,6 +184,21 @@
         {% endfor %}
       </tbody>
     </table>
+    <div class="container-glossary">
+      <strong>Glossário de Status:</strong>
+      <div class="glossary-tags">
+        <span class="glossary-tag"><span class="glossary-dot booking"></span> Booking — emitido, carga não estufada</span>
+        <span class="glossary-tag"><span class="glossary-dot depositado"></span> Depositado — container pronto p/ viagem</span>
+        <span class="glossary-tag"><span class="glossary-dot saida_confirmada"></span> Saída confirmada</span>
+        <span class="glossary-tag"><span class="glossary-dot em_transito"></span> Em trânsito</span>
+        <span class="glossary-tag"><span class="glossary-dot atrasado"></span> Atrasado — ETD vencida sem chegada</span>
+        <span class="glossary-tag"><span class="glossary-dot confirmacao_chegada"></span> Chegada confirmada</span>
+        <span class="glossary-tag"><span class="glossary-dot aduana"></span> Aduana — liberação RFB/CBP</span>
+        <span class="glossary-tag"><span class="glossary-dot liberado"></span> Liberado</span>
+        <span class="glossary-tag"><span class="glossary-dot remocao"></span> Remoção — trânsito p/ armazém</span>
+        <span class="glossary-tag"><span class="glossary-dot entregue"></span> Entregue</span>
+      </div>
+    </div>
   </div>
 </div>
 </div>

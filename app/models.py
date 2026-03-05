@@ -15,10 +15,16 @@ class UrgencyLevel(str, enum.Enum):
 
 
 class ContainerStatus(str, enum.Enum):
-    transit = "transit"
-    arrived = "arrived"
-    loading = "loading"
-    alert = "alert"
+    booking = "booking"               # Booking emitido, carga não estufada
+    depositado = "depositado"         # Container depositado, pronto p/ viagem
+    saida_confirmada = "saida_confirmada"  # Saída confirmada
+    em_transito = "em_transito"       # Em trânsito marítimo
+    atrasado = "atrasado"             # ETD < hoje sem confirmação de chegada
+    confirmacao_chegada = "confirmacao_chegada"  # Navio chegou ao destino
+    aduana = "aduana"                 # Em liberação aduaneira (RFB ou CBP)
+    liberado = "liberado"             # Aduana finalizada
+    remocao = "remocao"               # Em trânsito para armazém de desova
+    entregue = "entregue"             # Retirada confirmada pelo cliente
 
 
 class UserRole(str, enum.Enum):
