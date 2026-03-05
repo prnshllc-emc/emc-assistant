@@ -13,7 +13,7 @@ CONTAINERS = [
     {"op": "1039-E-ON", "booking": "265005727", "container": "MSKU1741282",
      "vessel": "RDO FORTUNE 602N", "route": "SSZ → PNJ",
      "etd": "18/Jan", "eta": "03/Mar",
-     "status": "aduana", "status_text": "CBP Release pendente"},
+     "status": "liberado", "status_text": "CBP Release 05/Fev — Entry 2620588-9"},
 
     {"op": "1040-E-ON", "booking": "265005786", "container": "SUDU895110-8",
      "vessel": "RDO FORTUNE 602N", "route": "SSZ → PEF",
@@ -23,7 +23,7 @@ CONTAINERS = [
     {"op": "1041-E-ON", "booking": "265005757", "container": "SUDU872956-0",
      "vessel": "MAERSK FRANKFURT 604N", "route": "SSZ → PNJ",
      "etd": "18/Jan", "eta": "03/Mar",
-     "status": "confirmacao_chegada", "status_text": "Chegou PNJ"},
+     "status": "liberado", "status_text": "CBP Release 18/Fev — Entry 2620589-7"},
 
     {"op": "1044-E-ON", "booking": "265399692", "container": "BEAU5815003",
      "vessel": "MAERSK FORTALEZA 603N", "route": "SSZ → PEF → JAX → FTL",
@@ -45,11 +45,11 @@ CONTAINERS = [
      "etd": "01/Mar", "eta": "17/Mar",
      "status": "em_transito", "status_text": "Em trânsito marítimo"},
 
-    # ── Importação BMW ───────────────────────────────────────────────────
-    {"op": "IMP-BMW E30", "booking": "A definir", "container": "NNES8404834",
-     "vessel": "A definir", "route": "Hamburg → Santos",
+    # ── Importação BMW E30 (Allog / René Genofre) ────────────────────────
+    {"op": "1052-I-ON", "booking": "A definir", "container": "1x FCL 20'",
+     "vessel": "A definir", "route": "Bremerhaven → Santos",
      "etd": "A definir", "eta": "22-26d trânsito",
-     "status": "booking", "status_text": "Cotação em andamento (Hapag-Lloyd)"},
+     "status": "booking", "status_text": "⚠️ LI vencida 22/Fev — renovar + nova cotação Allog"},
 
     # ── Retorno Argentina (Allog) ────────────────────────────────────────
     {"op": "1034-A-ON", "booking": "IM0226121586", "container": "IKLZ7776576",
