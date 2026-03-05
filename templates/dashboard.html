@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMC - Assistente Executivo | {{ user.name }}</title>
+<link rel="stylesheet" href="/static/style.css">
+<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+</head>
+<body>
+
+<div class="header">
+  <h1>Assistente Executivo <span>EMC</span> <span class="badge">{{ n_urgent }} URGENTES</span></h1>
+  <div class="user-info">
+    <span class="date">{{ user.email }}</span>
+    <a href="/logout">Sair</a>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('profissional')">Profissional EMC <span class="count">{{ n_total }}</span></div>
+  <div class="tab" onclick="showTab('containers')">Containers <span class="count">{{ n_containers }}</span></div>
+  <div class="tab" onclick="showTab('api-info')">API</div>
+</div>
+
+<!-- Modal overlay -->
+<div id="modal-overlay" class="modal-overlay" onclick="if(event.target===this)this.classList.remove('active')">
+  <div id="modal-content"></div>
+</div>
+
+<!-- ===== TAB: PROFISSIONAL EMC ===== -->
+<div id="profissional" class="tab-content active">
+
+<div class="stats-bar">
+  <div class="stat-card urgent"><div class="number">{{ n_urgent }}</div><div class="label">Urgente / Risco</div></div>
+  <div class="stat-card pending"><div class="number">{{ n_pending }}</div><div class="label">Pendente sua resposta</div></div>
+  <div class="stat-card waiting"><div class="number">{{ n_waiting }}</div><div class="label">Aguardando fornecedor</div></div>
+  <div class="stat-card info"><div class="number">{{ n_info }}</div><div class="label">Informativo</div></div>
+  <div class="stat-card calendar"><div class="number">{{ n_containers }}</div><div class="label">Containers ativos</div></div>
+</div>
+
+<div class="main">
+
+  <!-- URGENTE -->
+  <div class="section full-width">
+    <div class="section-header">
+      <h2 style="color:#ef4444">&#x1F6A8; Urgente / Risco</h2>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="count">{{ n_urgent }}</span>
+        <button class="add-btn" hx-get="/htmx/items/new" hx-target="#modal-content" hx-swap="innerHTML"
+                onclick="document.getElementById('modal-overlay').classList.add('active')">+ Novo</button>
+      </div>
+    </div>
+    <div class="section-body">
+      {% for item in urgent %}
+        {% include "partials/item_card.html" %}
+      {% endfor %}
+      {% if not urgent %}
+        <div class="empty-state">Nenhum item urgente</div>
+      {% endif %}
+      <div id="new-item-slot"></div>
+    </div>
+  </div>
+
+  <!-- PENDENTE -->
+  <div class="section full-width">
+    <div class="section-header">
+      <h2 style="color:#f59e0b">&#x23F3; Pendente sua resposta</h2>
+      <span class="count">{{ n_pending }}</span>
+    </div>
+    <div class="section-body">
+      {% for item in pending %}
+        {% include "partials/item_card.html" %}
+      {% endfor %}
+      {% if not pending %}
+        <div class="empty-state">Nenhum item pendente</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- AGUARDANDO -->
+  <div class="section full-width">
+    <div class="section-header">
+      <h2 style="color:#3b82f6">&#x1F504; Aguardando fornecedor</h2>
+      <span class="count">{{ n_waiting }}</span>
+    </div>
+    <div class="section-body">
+      {% for item in waiting %}
+        {% include "partials/item_card.html" %}
+      {% endfor %}
+      {% if not waiting %}
+        <div class="empty-state">Nenhum item aguardando</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- INFORMATIVO -->
+  <div class="section full-width">
+    <div class="section-header">
+      <h2 style="color:#22c55e">&#x2139;&#xFE0F; Informativo</h2>
+      <span class="count">{{ n_info }}</span>
+    </div>
+    <div class="section-body">
+      {% for item in info %}
+        {% include "partials/item_card.html" %}
+      {% endfor %}
+      {% if not info %}
+        <div class="empty-state">Nenhum item informativo</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- CONTAINERS TABLE — inside Profissional tab -->
+  <div class="section full-width">
+    <div class="section-header">
+      <h2>&#x1F6A2; Containers Ativos EMC</h2>
+      <span class="count">{{ n_containers }}</span>
+    </div>
+    <table class="container-table">
+      <thead>
+        <tr><th>Operação / Booking</th><th>Container</th><th>Navio</th><th>Rota</th><th>ETD</th><th>ETA</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        {% for c in containers %}
+        <tr>
+          <td><strong>{{ c.operation }}</strong><br><span style="color:#64748b;font-size:11px">{{ c.booking }}</span></td>
+          <td style="font-family:monospace;font-size:12px;color:#60a5fa">{{ c.container_number }}</td>
+          <td>{{ c.vessel }}</td>
+          <td>{{ c.route }}</td>
+          <td>{{ c.etd }}</td>
+          <td>{{ c.eta }}</td>
+          <td><span class="status-badge {{ c.status }}">{{ c.status_text }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</div>
+
+<!-- ===== TAB: CONTAINERS (mirror) ===== -->
+<div id="containers" class="tab-content">
+<div style="padding: 20px 32px;">
+  <div class="section full-width">
+    <div class="section-header">
+      <h2>&#x1F6A2; Containers Ativos EMC</h2>
+      <span class="count">{{ n_containers }}</span>
+    </div>
+    <table class="container-table">
+      <thead>
+        <tr><th>Operação / Booking</th><th>Container</th><th>Navio</th><th>Rota</th><th>ETD</th><th>ETA</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        {% for c in containers %}
+        <tr>
+          <td><strong>{{ c.operation }}</strong><br><span style="color:#64748b;font-size:11px">{{ c.booking }}</span></td>
+          <td style="font-family:monospace;font-size:12px;color:#60a5fa">{{ c.container_number }}</td>
+          <td>{{ c.vessel }}</td>
+          <td>{{ c.route }}</td>
+          <td>{{ c.etd }}</td>
+          <td>{{ c.eta }}</td>
+          <td><span class="status-badge {{ c.status }}">{{ c.status_text }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ===== TAB: API INFO ===== -->
+<div id="api-info" class="tab-content">
+<div style="padding: 20px 32px;">
+  <div class="section full-width">
+    <div class="section-header">
+      <h2>&#x1F4E1; API REST</h2>
+    </div>
+    <div style="padding:20px;font-size:13px;color:#94a3b8;">
+      <p style="margin-bottom:16px;">API documentation available at <a href="/docs" style="color:#60a5fa" target="_blank">/docs</a> (Swagger UI) and <a href="/redoc" style="color:#60a5fa" target="_blank">/redoc</a> (ReDoc).</p>
+
+      <h4 style="color:#f8fafc;margin-bottom:8px;">Auth</h4>
+      <code style="color:#4ade80;background:#0f172a;padding:8px 12px;border-radius:6px;display:block;margin-bottom:16px;">
+POST /api/v1/auth/login &nbsp;→&nbsp; {"email":"...","password":"..."} → JWT token<br>
+GET &nbsp;/api/v1/auth/me &nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; User info (requires Bearer token)
+      </code>
+
+      <h4 style="color:#f8fafc;margin-bottom:8px;">Items (CRUD)</h4>
+      <code style="color:#4ade80;background:#0f172a;padding:8px 12px;border-radius:6px;display:block;margin-bottom:16px;">
+GET &nbsp;&nbsp;&nbsp;/api/v1/items &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; List (filtros: ?urgency=, ?status=, ?category=)<br>
+GET &nbsp;&nbsp;&nbsp;/api/v1/items/{id} &nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; Detail<br>
+POST &nbsp;&nbsp;/api/v1/items &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; Create<br>
+PUT &nbsp;&nbsp;&nbsp;/api/v1/items/{id} &nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; Update<br>
+DELETE &nbsp;/api/v1/items/{id} &nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; Delete<br>
+POST &nbsp;&nbsp;/api/v1/items/{id}/resolve → Toggle resolved<br>
+GET &nbsp;&nbsp;&nbsp;/api/v1/items/stats &nbsp;&nbsp;&nbsp;→&nbsp; Dashboard stats
+      </code>
+
+      <h4 style="color:#f8fafc;margin-bottom:8px;">Containers</h4>
+      <code style="color:#4ade80;background:#0f172a;padding:8px 12px;border-radius:6px;display:block;">
+GET &nbsp;&nbsp;/api/v1/containers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; List all<br>
+POST &nbsp;/api/v1/containers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; Create<br>
+PUT &nbsp;&nbsp;/api/v1/containers/{id} →&nbsp; Update
+      </code>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  event.target.closest('.tab').classList.add('active');
+}
+</script>
+
+</body>
+</html>

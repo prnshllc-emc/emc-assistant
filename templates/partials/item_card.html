@@ -1,0 +1,26 @@
+{% set ac, al = action_for_item(item) %}
+<div class="item-h {% if item.is_resolved %}resolved{% endif %}" id="item-{{ item.id }}" data-id="{{ item.id }}">
+  <div class="item-h-priority">
+    <span class="priority-tag {{ item.urgency }}">{{ priority_label(item.urgency) }}</span>
+  </div>
+  <div class="item-h-body" hx-get="/htmx/items/{{ item.id }}/edit" hx-target="#modal-content" hx-swap="innerHTML" onclick="document.getElementById('modal-overlay').classList.add('active')">
+    <div class="item-h-title">
+      {{ item.title }}
+      <span class="source-tag {{ source_class(item.source) }}">{{ source_label(item.source) }}</span>
+    </div>
+    <div class="item-h-desc">{{ item.description }}</div>
+    <div class="item-h-meta">
+      {% if item.contacts %}{{ item.contacts }}{% endif %}
+      {% if item.amount %} &bull; 💲 {{ item.amount }}{% endif %}
+      {% if item.deadline %} &bull; 📅 {{ item.deadline }}{% endif %}
+    </div>
+  </div>
+  <div class="item-h-action">
+    <span class="action {{ ac }}">{{ al }}</span>
+    <button class="status-btn {% if item.is_resolved %}done{% endif %}"
+            hx-post="/htmx/items/{{ item.id }}/resolve"
+            hx-target="#item-{{ item.id }}"
+            hx-swap="outerHTML"
+            title="{% if item.is_resolved %}Reabrir{% else %}Marcar como resolvido{% endif %}">&#x2714;</button>
+  </div>
+</div>

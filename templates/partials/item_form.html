@@ -1,0 +1,105 @@
+<div class="modal">
+  <h3>{% if item %}Editar Demanda{% else %}Nova Demanda{% endif %}</h3>
+
+  <form {% if item %}
+          hx-put="/htmx/items/{{ item.id }}"
+          hx-target="#item-{{ item.id }}"
+          hx-swap="outerHTML"
+        {% else %}
+          hx-post="/htmx/items"
+          hx-target="#new-item-slot"
+          hx-swap="beforebegin"
+        {% endif %}
+        hx-on::after-request="document.getElementById('modal-overlay').classList.remove('active')">
+
+    <div class="form-group">
+      <label>Título</label>
+      <input type="text" name="title" value="{{ item.title if item else '' }}" required>
+    </div>
+
+    <div class="form-group">
+      <label>Descrição</label>
+      <textarea name="description" rows="3">{{ item.description if item else '' }}</textarea>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <div class="form-group">
+        <label>Urgência</label>
+        <select name="urgency">
+          {% for val, lbl in [("critical","Crítico"),("high","Alta"),("medium","Média"),("low","Baixa"),("info","Info")] %}
+          <option value="{{ val }}" {% if item and item.urgency == val %}selected{% endif %}>{{ lbl }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Categoria</label>
+        <input type="text" name="category" value="{{ item.category if item else '' }}" placeholder="COMEX/Logística, Financeiro...">
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status">
+          {% for val in ["Pendente","Em andamento","Aguardando terceiro","Resolvido","Estratégico"] %}
+          <option value="{{ val }}" {% if item and item.status == val %}selected{% endif %}>{{ val }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Prazo</label>
+        <input type="text" name="deadline" value="{{ item.deadline if item else '' }}">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Contatos</label>
+      <input type="text" name="contacts" value="{{ item.contacts if item else '' }}">
+    </div>
+
+    <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 12px;">
+      <div class="form-group">
+        <label>Valor</label>
+        <input type="text" name="amount" value="{{ item.amount if item else '' }}">
+      </div>
+      <div class="form-group">
+        <label>Tipo valor</label>
+        <select name="amount_type">
+          <option value="" {% if not item or not item.amount_type %}selected{% endif %}>—</option>
+          <option value="negative" {% if item and item.amount_type == 'negative' %}selected{% endif %}>Despesa</option>
+          <option value="positive" {% if item and item.amount_type == 'positive' %}selected{% endif %}>Receita</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Fonte</label>
+      <input type="text" name="source" value="{{ item.source if item else 'Manual' }}">
+    </div>
+
+    <div class="form-group">
+      <label>Notas</label>
+      <textarea name="notes" rows="2">{{ item.notes if item else '' }}</textarea>
+    </div>
+
+    <div class="modal-actions">
+      {% if item %}
+      <button type="button" class="btn btn-danger btn-sm"
+              hx-delete="/htmx/items/{{ item.id }}"
+              hx-target="#item-{{ item.id }}"
+              hx-swap="outerHTML"
+              hx-confirm="Excluir esta demanda?"
+              onclick="document.getElementById('modal-overlay').classList.remove('active')">
+        Excluir
+      </button>
+      {% endif %}
+      <button type="button" class="btn btn-sm" style="background:#334155;color:#94a3b8;"
+              onclick="document.getElementById('modal-overlay').classList.remove('active')">
+        Cancelar
+      </button>
+      <button type="submit" class="btn btn-primary btn-sm">
+        {% if item %}Salvar{% else %}Criar{% endif %}
+      </button>
+    </div>
+  </form>
+</div>
