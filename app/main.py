@@ -220,6 +220,7 @@ async def htmx_toggle_resolve(item_id: int, request: Request, db: Session = Depe
     from datetime import datetime
     item.is_resolved = not item.is_resolved
     item.resolved_at = datetime.utcnow() if item.is_resolved else None
+    item.user_status_at = datetime.utcnow()  # mark as manually edited
     item.updated_at = datetime.utcnow()
     db.commit()
     db.refresh(item)
@@ -261,12 +262,17 @@ async def htmx_update_item(item_id: int, request: Request, db: Session = Depends
         raise HTTPException(status_code=404)
 
     form = await request.form()
+    status_changed = False
     for field in ["title", "description", "urgency", "category", "status", "contacts", "amount", "amount_type", "deadline", "source", "notes"]:
         val = form.get(field)
         if val is not None:
+            if field in ("status", "urgency") and val != getattr(item, field):
+                status_changed = True
             setattr(item, field, val)
 
     from datetime import datetime
+    if status_changed:
+        item.user_status_at = datetime.utcnow()  # mark as manually edited
     item.updated_at = datetime.utcnow()
     db.commit()
     db.refresh(item)

@@ -83,8 +83,31 @@ class IngestResult(BaseModel):
 
 # ─── Helpers ─────────────────────────────────────────────────────────────
 
+ACTION_KEYWORDS = [
+    "urgente", "vencimento", "prazo", "cobranç", "fatura", "boleto",
+    "assin", "aprovação", "aprovacao", "pendente", "responder",
+    "anexo", "attached", "segue", "follow-up", "ação", "acao",
+    "pagar", "pagamento", "verificar", "confirmar", "confirme",
+    "documento", "guia", "nota fiscal", "ct-e", "nf-e",
+]
+
+
+def _requires_action(text: str) -> bool:
+    """Check if text contains keywords that demand user action."""
+    lower = text.lower()
+    return any(kw in lower for kw in ACTION_KEYWORDS)
+
+
 def _upsert_item(db: Session, data: IngestItem) -> str:
-    """Upsert item by (source, thread_id) if thread_id is set, else create new."""
+    """Upsert item by (source, thread_id) if thread_id is set, else create new.
+
+    Respects manual user edits:
+    - If user manually resolved/changed status (user_status_at is set):
+      - Protected fields: status, is_resolved — NOT overwritten by automation
+      - UNLESS incoming data contains action-demanding content (keywords in
+        title/description/notes) → reopen the item
+    - Other fields (description, contacts, amount, etc.) always update freely
+    """
     existing = None
     if data.thread_id:
         existing = db.query(Item).filter(
@@ -93,11 +116,46 @@ def _upsert_item(db: Session, data: IngestItem) -> str:
         ).first()
 
     if existing:
-        for field in ["title", "description", "urgency", "category", "status",
-                       "contacts", "amount", "amount_type", "deadline", "notes"]:
+        # Fields that are always safe to update (not user-controlled)
+        safe_fields = ["title", "description", "contacts", "amount",
+                       "amount_type", "deadline", "notes", "category"]
+        # Fields protected by manual user edit
+        protected_fields = ["status", "urgency"]
+
+        # Update safe fields freely
+        for field in safe_fields:
             val = getattr(data, field)
-            if val:  # only update non-empty fields
+            if val:
                 setattr(existing, field, val)
+
+        # Check if user manually edited status
+        user_edited = existing.user_status_at is not None
+
+        if user_edited and existing.is_resolved:
+            # User resolved this item manually. Only reopen if new content demands action.
+            incoming_text = f"{data.title} {data.description} {data.notes}"
+            if _requires_action(incoming_text):
+                # New activity demands action → reopen
+                existing.is_resolved = False
+                existing.resolved_at = None
+                existing.user_status_at = None  # reset manual flag
+                existing.status = data.status or "Pendente"
+                existing.urgency = data.urgency or existing.urgency
+        elif user_edited:
+            # User changed status but didn't resolve — protect status/urgency
+            # Only update protected fields if incoming urgency is higher
+            urgency_rank = {"critical": 5, "high": 4, "medium": 3, "low": 2, "info": 1}
+            incoming_rank = urgency_rank.get(data.urgency, 0)
+            current_rank = urgency_rank.get(existing.urgency, 0)
+            if incoming_rank > current_rank:
+                existing.urgency = data.urgency
+        else:
+            # No manual edit — update everything freely
+            for field in protected_fields:
+                val = getattr(data, field)
+                if val:
+                    setattr(existing, field, val)
+
         existing.updated_at = datetime.utcnow()
         return "updated"
     else:

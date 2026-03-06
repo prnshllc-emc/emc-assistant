@@ -62,6 +62,7 @@ class Item(Base):
     notes = Column(Text, default="")
     is_resolved = Column(Boolean, default=False)
     resolved_at = Column(DateTime, nullable=True)
+    user_status_at = Column(DateTime, nullable=True)  # set when user manually changes status/resolved
     is_container_op = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
