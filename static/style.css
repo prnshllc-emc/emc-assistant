@@ -212,55 +212,6 @@ body {
   border-bottom: 1px solid var(--border);
 }
 
-/* ─── Summary Bar (financial metrics) ────────────────────── */
-.summary-bar {
-  display: flex;
-  gap: 0;
-  padding: 0 32px 16px;
-}
-
-.summary-item {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  transition: var(--transition);
-}
-
-.summary-item:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
-.summary-item:last-child { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
-.summary-item:not(:first-child) { border-left: none; }
-
-.summary-item:hover { background: var(--bg-card-alt); }
-
-.summary-icon { font-size: 20px; flex-shrink: 0; }
-
-.summary-data { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-
-.summary-value {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.3px;
-  white-space: nowrap;
-}
-
-.summary-label {
-  font-size: 10px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  font-weight: 500;
-}
-
-.summary-item.exposure .summary-value { color: var(--red); }
-.summary-item.income .summary-value { color: var(--green); }
-.summary-item.overdue .summary-value { color: var(--amber); }
-.summary-item.total .summary-value { color: var(--blue); }
-
 /* ─── Tab Colors ─────────────────────────────────────────── */
 .tab.tab-urgent.active  { color: var(--red); border-bottom-color: var(--red); }
 .tab.tab-pending.active { color: var(--amber); border-bottom-color: var(--amber); }
@@ -951,7 +902,6 @@ body {
   .header-main { padding: 14px 20px; }
   .tabs { padding: 0 20px; }
   .stats-bar { padding: 16px 20px; gap: 10px; }
-  .summary-bar { padding: 0 20px 12px; }
   .tab-inner { padding: 16px 20px; }
   .quick-links-grid { grid-template-columns: repeat(3, 1fr); }
   .main { padding: 0 20px 32px; }
@@ -990,21 +940,6 @@ body {
     gap: 8px;
   }
 
-  .summary-bar {
-    flex-wrap: wrap;
-    padding: 0 16px 12px;
-    gap: 0;
-  }
-  .summary-item {
-    flex: 1 1 calc(50% - 0px);
-    padding: 10px 12px;
-  }
-  .summary-item:first-child { border-radius: var(--radius-sm) 0 0 0; }
-  .summary-item:nth-child(2) { border-radius: 0 var(--radius-sm) 0 0; border-left: none; }
-  .summary-item:nth-child(3) { border-radius: 0 0 0 var(--radius-sm); border-top: none; }
-  .summary-item:last-child { border-radius: 0 0 var(--radius-sm) 0; border-left: none; border-top: none; }
-  .summary-value { font-size: 14px; }
-  .summary-icon { font-size: 16px; }
   .tab-inner { padding: 12px 16px; }
   .quick-links-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .quick-link-card { padding: 12px; gap: 10px; }
