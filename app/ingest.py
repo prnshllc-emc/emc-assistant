@@ -11,10 +11,10 @@ Endpoints:
 """
 import os
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union, List
 
 from fastapi import APIRouter, Depends, HTTPException, Header, Query
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -48,7 +48,7 @@ class IngestItem(BaseModel):
     urgency: str = "medium"          # critical, high, medium, low, info
     category: str = ""
     status: str = "Pendente"
-    contacts: str = ""
+    contacts: Union[str, List[str]] = ""
     amount: str = ""
     amount_type: str = ""            # positive, negative, ""
     deadline: str = ""
@@ -56,6 +56,14 @@ class IngestItem(BaseModel):
     thread_id: str = ""              # unique identifier from source (Gmail thread ID, calendar event ID, etc.)
     notes: str = ""
     is_container_op: bool = False
+
+    @field_validator("contacts", mode="before")
+    @classmethod
+    def coerce_contacts(cls, v):
+        """Accept contacts as string or list; always store as comma-separated string."""
+        if isinstance(v, list):
+            return ", ".join(str(c) for c in v)
+        return v
 
 
 class IngestContainer(BaseModel):
