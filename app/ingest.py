@@ -63,7 +63,17 @@ class IngestItem(BaseModel):
         """Accept contacts as string or list; always store as comma-separated string."""
         if isinstance(v, list):
             return ", ".join(str(c) for c in v)
+        if v is None:
+            return ""
         return v
+
+    @field_validator("amount", "amount_type", "deadline", mode="before")
+    @classmethod
+    def coerce_to_str(cls, v):
+        """Accept numbers/null and coerce to string. Make.com sends numeric amounts and null."""
+        if v is None:
+            return ""
+        return str(v)
 
 
 class IngestContainer(BaseModel):
