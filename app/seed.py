@@ -26,9 +26,9 @@ CONTAINERS = [
      "status": "entregue", "status_text": "Entregue — CBP exam Newark APM, pickup 23/Fev"},
 
     {"op": "1044-E-ON", "booking": "265399692", "container": "BEAU5815003",
-     "vessel": "MAERSK FORTALEZA 603N", "route": "SSZ → PEF → JAX → FTL",
-     "etd": "25/Jan", "eta": "09/Mar",
-     "status": "remocao", "status_text": "Rail FTL ETA 09/Mar — Drayage Daytona Beach pendente"},
+     "vessel": "MAERSK FORTALEZA 603N", "route": "SSZ → JAX → FTL → PEF",
+     "etd": "25/Jan", "eta": "13/Mar",
+     "status": "remocao", "status_text": "JAX discharge 28/Fev — Rail FEC dep 09/Mar → FTL arr 09/Mar — PEF ETA 13/Mar — Drayage Daytona Beach pendente"},
 
     {"op": "1045-E-ON", "booking": "266319284", "container": "TXGU5230441",
      "vessel": "MAERSK FREEPORT 606N", "route": "SSZ → PEF",
@@ -36,14 +36,14 @@ CONTAINERS = [
      "status": "em_transito", "status_text": "Em trânsito — A/N recebido"},
 
     {"op": "1046-E-ON", "booking": "266742326", "container": "MRSU558461-8",
-     "vessel": "MAERSK MONTE ALEGRE 608N", "route": "SSZ → PEF",
-     "etd": "01/Mar", "eta": "26/Mar",
-     "status": "em_transito", "status_text": "Em trânsito marítimo"},
-
-    {"op": "1047-E-ON", "booking": "266742227", "container": "CAAU677806-1",
      "vessel": "MAERSK MONTE ALEGRE 608N", "route": "SSZ → EWR (Newark)",
      "etd": "01/Mar", "eta": "17/Mar",
-     "status": "em_transito", "status_text": "Em trânsito marítimo"},
+     "status": "em_transito", "status_text": "Em trânsito — ETA Newark APM 17/Mar 07:00"},
+
+    {"op": "1047-E-ON", "booking": "266742227", "container": "CAAU677806-1",
+     "vessel": "MAERSK MONTE ALEGRE 608N", "route": "SSZ → PEF",
+     "etd": "01/Mar", "eta": "26/Mar",
+     "status": "em_transito", "status_text": "Em trânsito — ETA Port Everglades FIT 26/Mar 14:00"},
 
     # ── Importação BMW E30 (Allog / Mundi) ────────────────────────────────
     {"op": "1025-I-ON", "booking": "A definir", "container": "1x FCL 20'",
